@@ -1,0 +1,30 @@
+---
+title: "Project Part 1" 
+fontsize: 12pt
+geometry: margin=1in
+urlcolor: black
+output: pdf_document
+header-includes:
+- \usepackage{setspace}
+- \onehalfspacing
+---
+
+## Topic of Interest
+### For my project, I want to explore what makes the top MLB power hitters different from the rest of the hitters There are many factors that go into the evaluation of a hitter. Batting average (the amount of times the hitter hits the ball over the number of times the hitter is at the plate), on base percentage (number of times the hitter reaches at least first base over the number of at bats), and slugging percentage (total number of bases a hitter records per at-bat) are just some of these many factors. What I specifically want to look at is the relationship between variables that are collected when a batter hits a home run. By looking specifically at home run statistics, I can start to make out what separates a standard hitter from a very good power hitter.
+
+## Research Questions
+### The three research questions I have come with are as follows: 1) What is the relationship between the average hit angle and average home run distance? Answering this question can provide insight on how batters can set up in the box to either raise or lower their hit angle (if there is a relationship between the two variables). 2) Does a batter's hit speed play a role in the distance they hit the ball? Here I can see whether or not a more powerful hitter tends to hit the ball with a lot of speed or not. 3) Is a batter's hit speed or launch angle more important to consider when trying to hit a home run? This question combines the first two and explores the possibility of one metric being more important when training to hit home runs. 
+
+## Populations of Interest
+### There are many groups of people that could be interested in this type of analysis. The first group is hitters. If a hitter is trying to become more valuable and earn a new contract, they might want to tailor their swing to hit more home runs. Finding out whether to change their swing angle or speed could help with that. Another group of interest could be coaches, managers, and/or owners. Management would be especially interested in this when trying to recruit players of value to the team.
+\newpage
+## Appropriate Data
+### Appropriate data for this analysis should come from MLB data sources that keep track of hitting statistics. These statistics come directly from the games over a season, and are a primary source. For this project, I have found a dataset from the MLB at this link: https://baseballsavant.mlb.com/leaderboard/statcast.
+
+### Data
+```{r, warning=FALSE, echo=FALSE}
+library(readr)
+mlb <- read_csv("exit_velocity.csv")
+head(mlb)
+```
+

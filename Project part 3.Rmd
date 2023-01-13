@@ -1,0 +1,71 @@
+---
+title: "Project Part 3" 
+fontsize: 12pt
+geometry: margin=1in
+urlcolor: black
+output: pdf_document
+header-includes:
+- \usepackage{setspace}
+- \onehalfspacing
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(readr)
+velo <- read_csv("exit_velocity.csv")
+ba <- read_csv("expected_stats.csv")
+velo$name <- paste(velo$first_name, velo$last_name)
+ba$name <- paste(ba$first_name, ba$last_name)
+velo <- velo[,-c(1,2)]
+ba <- ba[,-c(1,2)]
+mlb <- merge(x=velo,y=ba,by=c("name", "player_id"))
+```
+## Project Question
+Do players in the 2022 MLB season with at least a 0.275 bating average have an average hit distance greater than the population on average? With this question, I want to explore the possibility of what I will define as "good" hitters (batting average is at least 0.275) achieving further average hit distances. This question could also give insight on how a team should set up their defense based on a hitter's average hit distance. I am choosing 0.275 as the threshold for "good" hitters as this is higher than what is is generally accepted by the MLB community as being an average hitter (0.250 batting average)[2].
+
+## Data Description
+The two data sets I will use both come from <https://baseballsavant.mlb.com/>, which is a data collection site using STATCAST powered by GCP. This site is directly maintained by the MLB, therefore making it a primary source. The data contains aggregated hitting statistics for every eligible hitter for the entire 2022 season. The data was directly collected from each player's game, with an aggregation of each player's statistics conducted after each game. Since every eligible hitter in the MLB is accounted for in the data, the data is a population, and conclusions can only be made about MLB hitters. 
+Since the data is coming directly from the player's performance in every game, it makes a great tool to use when conducting my statistical test, as population parameters can be calculated. The data also contains the two variables I want to test, batting average and average hit distance. 
+
+## Test Identification
+The test I will use is the one-sample t-test. I will be using this test since I am trying to figure out whether an unknown mean parameter is different from a specified value.
+
+## Test Characteristics
+The test characteristics to use a one-sample t-test are a population parameter, a sample, and a sample parameter to compare against the population parameter. All three are met for my research question. The population parameter is the mean of average hit distance among the entire population of MLB hitters. The sample is MLB hitters who have a batting average of at least 0.275. The sample parameter is the the mean of average hit distance among the sample of "good" MLB hitters.   
+
+## Test Assumptions and Validity of Assumptions
+The one-sample t-test requires the data to be approximately normally distributed. The QQ plots below show that both the population and sample for average hit distance is approximately normal, with the majority of points falling on or near the QQ line.   
+```{r,figures-side, fig.show="hold", out.width="50%", echo=FALSE}
+mlb <- mlb[,c(11,21)]         # subsetting to columns of interest
+sub <- mlb[mlb$ba >= 0.275,]  # getting sample data
+par(mfrow=c(1,2)) 
+ggplot(mlb, aes(sample = avg_distance)) + stat_qq() + stat_qq_line()+
+  labs(title="Population Avg Hit Distance")     # testing normality of population
+ggplot(sub, aes(sample = avg_distance)) + stat_qq() + stat_qq_line()+
+  labs(title="Sample Avg Hit Distance")   # testing normality of sample
+```
+
+## Test Hypothesis
+The null hypothesis is the average hit distance of "good" hitters is equal or less than the average hit distance of all hitters. The alternative hypothesis is the average hit distance of "good" hitters is greater than the average hit distance of all hitters.
+
+## One-Sample T-Test
+```{r, echo=FALSE}
+pop_mean <- mean(mlb$avg_distance)    # getting the population mean
+samp_mean <- mean(sub$avg_distance)   # getting the sample mean
+t.test(sub$avg_distance, mu=pop_mean, alternative="greater") # conducting the test
+```
+## Test Result and Conclusions
+The p-value obtained from the one-sample t-test is 0.832. Since the p-value obtained is greater than the alpha value of 0.05, we fail to reject the null hypothesis. Based on the statistical test result, we can conclude that there is no evidence that "good" hitters tend to hit the ball farther on average when compared to all MLB hitters in the 2022 season. 
+
+## Generalization
+This test result can be generalized beyond the data to multiple MLB seasons or across different baseball leagues. Since values are averaged across an entire season and the rules of baseball tend not to change from season to season, it is safe to say that this result will hold for previous MLB seasons. Also, since the MLB is one of the most diverse leagues around the world and contains athletes from a variety of countries, the test result will hold when looking at other top tier baseball leagues around the world. 
+
+\newpage
+## References
+1) <https://baseballsavant.mlb.com/>
+2) <https://coachingkidz.com/the-ultimate-guide-to-batting-average-in-baseball/>
+

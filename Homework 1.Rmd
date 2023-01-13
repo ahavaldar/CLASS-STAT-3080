@@ -1,0 +1,173 @@
+---
+title: "Homework 1" 
+author: "Akhil Havaldar (ash2sfp)"
+fontsize: 12pt
+geometry: margin=1in
+urlcolor: black
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE, highlight=FALSE)
+```
+
+## Problem 1   
+### a
+```{r}
+v1 <- seq(513,585,9)
+print(v1)
+seq(60, 50, -2)
+rep(c('W', 'L', 'T'),2)
+```
+### b
+```{r}
+v2 <- rep("1st", 5)
+print(v2)
+```
+### c
+```{r}
+v3 <- seq(37, 52)
+print(v3)
+```
+### d
+```{r}
+v4a <- c('1st', '2nd', '3rd')
+v4b <- rep(v4a, each = 3)
+print(v4b)
+```
+### e
+```{r}
+v5<- seq(155, 135, by = -4)
+print(v5)
+```
+### f 
+```{r}
+v6a <- seq(50, 100, 10)
+v6b <- seq(95,75,-5)
+v6c <- rep(c(v6a, v6b),1)
+print(v6c)
+```
+### g
+```{r}
+v7a <- seq(20,50, 10)
+v7b <- rep(v7a, 4:1)
+rep(c(15,16,17,18),2:1)
+print(v7b)
+```
+### h
+```{r}
+v8 <- rep(seq(2,0,-1), 5)
+print(v8)
+```
+### i
+```{r}
+v9 <- rep(c(seq(124, 68, -8), seq(63, 38, -5)),1)
+print(v9)
+```
+### j 
+```{r}
+v10a <- c("3rd", "2nd", '1st') 
+v10b <- rep(v10a, 2)
+print(v10b)
+```
+
+## Problem 2
+### a
+```{r}
+# prob t<29.43
+p1 <- pnorm(29.43, mean=63, sd = 12)
+print(p1)
+```
+### b
+```{r}
+# we want the bottom 5% of the distribution since faster runners have lower times
+p2 <- qnorm(0.05, mean=63, sd=12)
+print(p2)
+```
+### c
+```{r}
+# want to find prob that time>= 90
+p3 <- 1-pnorm(90, mean=63, sd=12)
+num <- 28000 * p3
+print(num)
+```
+
+## Problem 3
+### a
+```{r}
+x1 <- 1 - pbinom(1,10,0.1)
+print(x1)
+```
+### b 
+```{r}
+x2 <- round(dbinom(1:10,10,.1),3) #CHECK
+print(x2)
+```
+### c
+```{r}
+f <- 1:10
+g <- rbind(f, x2)
+print(g)
+```
+### The numeric values take an equivalent number of decimal points as their corresponding probability values. 
+
+### d
+```{r}
+names(x2) <- f
+print(x2)
+```
+### e
+
+### The vector created in part d is easier to read since the numeric values are now represented as part of the vector instead as a separate row. It is also easier on the eye to look at non decimal values. 
+
+### f
+```{r}
+j <- as.data.frame(cbind(f, x2))
+print(j)
+```
+### g
+```{r}
+k <- as.data.frame(x2)
+print(k)
+```
+### h
+### I think the dataframe in (g) is a better representation because it is a simplified format. Since the numeric vector corresponds to the row number anyways, it makes sense to condense it this way. However, it will be important to note the significance of the indices, since there is no column name giving it context. 
+
+
+
+## Problem 4
+### a
+```{r}
+name <- ('Gretchen Martinet')
+dept <- ('Statistics')
+
+courses <- c("STAT 3080", "STAT 2559")
+y <- c('Course1', "Course2")
+names(courses) <- y
+
+activeteach <- c(TRUE, FALSE)
+z <- c('Course1', "Course2")
+names(activeteach) <- z
+
+
+enrcourse1 <- c(75,90,90)
+enrcourse2 <- 5
+Enr <- list(Course1 = enrcourse1, Course2 = enrcourse2)
+
+dayscourse2 <- c("Tuesday", "Thursday")
+dayscourse1 <- cbind(c("Monday", "Tuesday", "Tuesday"),c("Wednesday", "Thursday", "Thursday"))
+Days <- list(Course1 = dayscourse1, Course2 = dayscourse2)
+
+ans <- list(Name = name, Department = dept, Courses=courses, ActiveTeach = activeteach, Enr = Enr, Days = Days)
+
+print(ans)
+```
+
+
+## References
+1. Your resources go here. Links should be surrounded by <>.
+Linebreaks are created using two spaces at the end of the previous line of text, or using the command \newline.  
+Pagebreaks are created using the command \newpage.  
+Note: These commands execute when knitting, moving the end-of-sentence period in the resulting PDF.
+

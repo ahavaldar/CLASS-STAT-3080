@@ -1,0 +1,195 @@
+---
+title: "Homework 2" 
+author: "Akhil Havaldar (ash2sfp)"
+fontsize: 12pt
+geometry: margin=1in
+urlcolor: black
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Problem 1
+```{r}
+#a)
+days <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
+commutes <- matrix(c(25,24,36,27,21,36,34,33,25,32), nrow=5, ncol=2, byrow=TRUE)
+print(commutes)
+```
+
+
+```{r}
+#b)
+rownames(commutes) <- days
+colnames(commutes) <- c('Week1', 'Week2')
+print(commutes)
+```
+
+
+```{r}
+#c) 
+new <- ifelse(commutes[,2] < commutes[,1], "faster", "not")
+print(new)
+```
+
+
+```{r}
+#d) 
+print(apply(commutes, 1, mean))
+```
+
+
+```{r}
+#e) 
+diff <- commutes - 30
+print(diff)
+```
+
+
+```{r}
+#f) 
+print(apply(diff, 2, mean))
+```
+
+
+```{r}
+#g) 
+print(apply(diff, 2, max))
+```
+
+
+```{r}
+#h) 
+temp <- which(commutes[,2]<25)
+temp <- rownames(commutes)[temp]
+temp
+```
+
+
+```{r}
+#i) 
+temp2 <- commutes[,1:2]<=30
+print(apply(temp2, 2, sum))
+```
+
+
+```{r}
+#j) 
+j <- which(commutes[,1] == min(commutes[,1]))
+d <- rownames(commutes)[j]
+print(d)
+```
+
+
+```{r}
+#k) 
+k <- which((diff[,1] * diff[,2])>0)
+temp3 <- diff[k,]
+print(temp3)
+```
+
+# Question 2
+
+```{r}
+library(car)
+
+#a
+
+weight.metric <- Davis[,c(2,4)]
+head(weight.metric)
+```
+
+
+```{r}
+#b
+
+weight.imp <- weight.metric*2.2
+head(weight.imp)
+```
+
+
+```{r}
+#c
+
+height.metric <- Davis[,c(3,5)]
+head(height.metric)
+```
+
+
+```{r}
+#d
+
+height.imp <- round(height.metric/2.54,1)
+head(height.imp)
+```
+
+
+```{r}
+#e
+sex <- Davis$sex
+Davis.imp <- cbind(sex, weight.imp, height.imp)
+colnames(Davis.imp)<- c("sex", "rec.weight", "rep.weight", "rec.height", "rep.height")
+head(Davis.imp)
+```
+
+
+```{r}
+#f) 
+print(colSums(is.na(Davis.imp)))
+```
+
+
+```{r}
+#g
+sum(!complete.cases(Davis.imp))
+```
+
+
+```{r}
+#h) 
+df <- Davis.imp[rowSums(is.na(Davis.imp)) > 0,]
+df <- df$sex
+print(df)
+```
+
+# Question 3
+```{r}
+#a) 
+planet <- data.frame(name = c("Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"), distance = c(0.39, 0.72, 1, 1.52, 5.2, 9.54, 19.18, 30.06), type = c(rep("Terrestrial", 4), rep("Gas", 4)), diameter = c(0.382, 0.949, 1, 0.532, 11.209, 9.449, 4.007, 3.883), rotation = c(58.64, -243.02, 1, 1.03, 0.41, 0.43, -0.72, 0.67), rings = c(rep("No", 4), rep("Yes", 4)), moons = c(0, 0, 1, rep("2+", 5))
+)
+print(planet)
+```
+
+
+```{r}
+#b
+bsub <- planet[which(planet$diameter < 5 & planet$diameter!=1),]
+print(bsub)
+```
+
+
+```{r}
+#c) 
+csub <- planet[which(planet$rotation > 0 & planet$rotation!=1), 'distance']
+print(csub)
+# or this to include names 
+csub2 <- planet[which(planet$rotation > 0 & planet$rotation!=1), c("name",'distance')]
+print(csub2)
+```
+
+
+```{r}
+#d)
+dsub <- planet[which(planet$diameter > 1), c("name", "moons", "type")]
+print(dsub)
+```
+
+
+```{r}
+#e) 
+esub <- planet[which(planet$moons == "2+"), c("rings", "type")]
+print(esub)
+```
+

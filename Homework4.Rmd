@@ -1,0 +1,109 @@
+---
+title: "Homework 4" 
+author: "Akhil Havaldar (ash2sfp)"
+fontsize: 12pt
+geometry: margin=1in
+urlcolor: black
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 1
+### a) 
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+dat <- read.csv("fatal accidents.csv")
+head(dat)
+```
+
+### b) 
+```{r, warning=FALSE, message=FALSE}
+vars <- unique(dat$State)
+state.list <- lapply(vars, function(x){subset(dat, State == x)})
+names(state.list) <- vars
+```
+
+### c)
+```{r, warning=FALSE, message=FALSE}
+lapply(state.list,head,n=3)
+```
+
+### d) 
+```{r}
+func <- function(x){
+  y <- x %>%
+  group_by(Day.of.week) %>%
+  summarise(cnt = n()) %>%
+  mutate(freq = (round(100*(cnt / sum(cnt)), 1)))
+}
+
+dotw <- lapply(state.list,func)
+lapply(dotw,head,n=7)
+```
+
+### e)
+- From the tables created in part d, we can see that in DC the majority of accidents happen on Tuesday and Friday, with the least being Thursday and Saturday. In Maryland, North Carolina and West Virginia, the most crashes are on Saturday, but are relatively evenly spread out. Virginia's crashes are the most evenly spread out among the days with Friday having the slight edge in most crashes. 
+
+### f) 
+```{r}
+# rows are dot, cols are number of vehicles in crash
+
+func2 <- function(x){
+  y <- with(x, table(Day.of.week,Vehicle.count)) 
+}
+
+vehicle.ct <- lapply(state.list, func2)
+lapply(vehicle.ct, head, n=7)
+
+```
+
+### g) 
+- Instead of the displaying the counts in a table, we can display them in a dataframe which would make it easier to subset individual observations based on a certain criterion.
+
+
+## Question 2
+### a) 
+```{r}
+dat$People.count <- dat$People.count.IN + dat$People.count.OUT
+head(dat)
+```
+
+### b) 
+```{r}
+b <- group_by(dat, State) %>%
+  summarize(avg.vehicles=mean(Vehicle.count), avg.ppl=mean(People.count))
+b
+```
+
+### c) 
+```{r}
+c <- group_by(dat, State) %>%
+  summarize(avg.vehicles=mean(Vehicle.count), min.vehicles=min(Vehicle.count), max.vehicles = max(Vehicle.count))
+c
+```
+
+### d) 
+- From part b we can see that the average number of vehicles in a crash is very similar across the different states. This is also the case with number of people in the crash, with DC having 0.5 more than the next highest state on average. From part d, we can see that all states have a minimum of 1 vehicle per crash, but the maximums vary by state. Maryland has the most with 12, and DC has the least with 4. 
+
+### e) 
+```{r}
+e <- subset(dat, State = "Virginia") %>%
+  group_by(Month) %>%
+  summarise(cnt = n())
+e
+```
+
+### f) 
+```{r}
+f <- subset(dat, State = "Virginia")
+f2 <- filter(f, Month == 6 |Month == 7 | Month== 8) %>%
+  group_by(Day.of.week) %>%
+  summarise(mean = mean(Vehicle.count), median = median(Vehicle.count))
+f2
+```
+
+### g) 
+- From part e, we can see the most accidents in a month for 2019 in Virginia is September (290). On the contrary, the lowest number of accidents occurred in December. From part f, based on only the summer months, Tuesday had the greatest median number of number of vehicles in a crash, while the rest of the days were equal at 1. The mean number of vehicles involved in accidents is roughly even across all the days of the week, with Wednesday and Saturday having slightly lower means. 

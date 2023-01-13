@@ -1,0 +1,81 @@
+---
+title: "Homework8"
+author: "Akhil Havaldar"
+date: "10/30/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(readr)
+```
+
+## Question 1
+```{r}
+set.seed(05202001)
+delta <- read.csv("Delta delays.csv")
+delta <- as.vector(delta$Arrival.Delay)
+quants <- quantile(delta)
+samp_iqr <- IQR(delta)
+
+B<-10000
+boot_samp <- replicate(B, sample(delta, replace=T))
+boot_iqr <- apply(boot_samp,2,IQR)
+
+boot_err <- boot_iqr - samp_iqr
+boot_err_sort <- sort(boot_err)
+p5.0 <- B*0.05
+p95.0 <- B*0.95
+boot_ci <- samp_iqr - boot_err_sort[c(p95.0,p5.0)]
+print(boot_ci)
+```
+- The bootstrap 90% CI for IQR is (-3.5, 21.0)
+
+## Question 2
+### a) 
+```{r}
+quants <- quantile(delta)
+samp_90 <- quantile(delta,c(.9))
+
+B<-10000
+boot_samp <- replicate(B, sample(delta, replace=T))
+boot_90 <- apply(boot_samp,2,quantile, 0.9)
+
+boot_90 <- boot_90 - samp_90
+boot_err_sort <- sort(boot_err)
+p025 <- B*0.025
+p97.5 <- B*0.975
+boot_ci <- samp_iqr - boot_err_sort[c(p97.5,p025)]
+print(boot_ci)
+```
+- We get a value of (-8,22.5) for the CI. There is some evidence that the 90th percentile of arrival delay length is a late arrival. 
+### b) 
+- No this is not indisputable. For it to be indisputable, the entire confidence interval for the 90th percentile has to be positive. 
+
+## Question 3
+```{r}
+set.seed(05202001)
+amer <- read.csv("American delays.csv")
+amer <- as.vector(amer$Arrival.Delay)
+amer90 <- quantile(amer, c(.90))
+print(amer90)
+print(samp_90)
+
+samp_diff <- samp_90 - amer90
+print(samp_diff)
+
+rand.test <- function(x){
+  rand_comb <- sample( c(delta, amer) )
+  bquant1 <- quantile(rand_comb[1:x], c(0.90))
+  bquant2 <- quantile(rand_comb[(x+1):(length(delta)+length(amer))], c(0.90))
+  bquant1 - bquant2
+}
+
+boot_diffs_null <- replicate(B, rand.test(length(delta)))
+sum(boot_diffs_null <= samp_diff | boot_diffs_null >= 2*mean(boot_diffs_null) - samp_diff)/B
+```
+- Fail to Reject null, which means that there is no evidence that the 90th percentile of arrival delay lengths is different between the two airlines.

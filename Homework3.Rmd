@@ -1,0 +1,156 @@
+---
+title: "Homework 3" 
+author: "Akhil Havaldar (ash2sfp)"
+fontsize: 12pt
+geometry: margin=1in
+urlcolor: black
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 1
+### a) 
+```{r}
+#a) 
+mean <- 109.8
+sd <- 7.4
+alpha <- 0.05
+print(mean)
+print(sd)
+print(alpha)
+```
+
+### b) 
+```{r}
+#b) 
+ztest <- function(size, mean, sd, alpha){
+  samp <- rnorm(size, mean = mean, sd = sd)
+  mean.samp <- mean(samp)
+  zstat <- (mean.samp-mean)/(sd/sqrt(size))
+  p <- 2*(pnorm(abs(zstat), lower.tail = FALSE))
+  ifelse(p<alpha, TRUE, FALSE)
+}
+
+print(ztest(23, mean, sd, alpha))
+```
+
+### c) 
+```{r}
+#c)
+rep <- replicate(10000, ztest(23, mean, sd, alpha))
+reject <- sum(rep)/length(rep)
+print(reject)
+```
+
+### d
+- Theoretically the proportion from part c should be 0.05. 
+
+### e) 
+```{r}
+#e) 
+prop <- function(size){
+  rep <- replicate(10000, ztest(size, mean, sd, alpha))
+  reject <- sum(rep)/length(rep)
+}
+
+prop8 <- prop(8)
+prop23 <- prop(23)
+prop52 <- prop(52)
+print(prop8)
+print(prop23)
+print(prop52)
+```
+
+### f) 
+```{r}
+#f) 
+lapply(3:52, prop)
+```
+
+
+### g
+- The sample size does not seem to have an impact on the results. With every sample size, the proportion seems to be between [0.04, 0.06]. 
+
+
+
+## Question 2
+### a) 
+```{r}
+#a) 
+
+nym2021 <- read.table('nym2021.txt', header=TRUE)
+head(nym2021)
+```
+
+### b) 
+```{r}
+#b)
+print(length(nym2021$Time))
+```
+
+### c) 
+```{r}
+#c)
+temp <- nym2021[nchar(as.character(nym2021$HomeStateOrCountry)) == 2, ]
+print(length(temp$HomeStateOrCountry))
+```
+
+### d) 
+```{r}
+#d)
+nym2021$country <- ifelse(nchar(as.character(nym2021$HomeStateOrCountry)) == 2, 
+                          "USA", nym2021$HomeStateOrCountry)
+table(nym2021$country)
+```
+
+### e) 
+```{r}
+#e) 
+print(length(unique(nym2021$country)))
+```
+
+### f)
+```{r}
+#f)
+print(c("Youngest:", min(nym2021$Age)))
+print(c("Oldest:", max(nym2021$Age)))
+```
+
+### g)
+```{r}
+#g) 
+temp2 <- nym2021[nym2021$Time == max(nym2021$Time),]
+print(c("Age Slowest:", temp2$Age))
+
+temp3 <- nym2021[nym2021$Time == min(nym2021$Time),]
+print(c("Age Fastest:", temp3$Age))
+```
+
+### h)
+```{r}
+#h) 
+temp4 <- nym2021[which(nym2021$DivPlace<=25),]
+print(length(temp4$DivPlace))
+```
+### i)
+```{r}
+#i) 
+print(sort(unique(temp4$DIV)))
+```
+
+### j)
+```{r}
+#j) 
+temp5 <- nym2021[which(nym2021$DivPlace<=10),]
+print(temp5)
+```
+
+### k)
+```{r}
+#k) 
+print(tapply(nym2021$Age, nym2021$BostonQualifier, mean))
+```
+
